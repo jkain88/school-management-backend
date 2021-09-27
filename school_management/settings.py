@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'school_management.core',
 
     # External apps
-    'django_countries'
+    'django_countries',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
