@@ -1,18 +1,20 @@
 # Base Image
 FROM python:3.8
 
-# Create and set working directory
+# Create and
 RUN mkdir /app
+
+# Set working directory
 WORKDIR /app
 
 # Cache dependencies
-COPY ./requirements.txt /app/requirements.txt
-
-# Add current directory code to working directory
-COPY . /app/
+COPY requirements.txt /app/requirements.txt
 
 # Install environment dependencies
 RUN pip install -r requirements.txt
+
+# Add current directory code to working directory
+COPY . /app/
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
