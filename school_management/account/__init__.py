@@ -10,3 +10,13 @@ class Role:
         (STAFF, "Staff"),
         (ADMIN, "Admin")
     ]
+
+
+class AddressType:
+    PERMANENT = "permanent"
+    CURRENT = "current"
+
+    CHOICES = [
+        (PERMANENT, "Permanent"),
+        (CURRENT, "Current")
+    ]

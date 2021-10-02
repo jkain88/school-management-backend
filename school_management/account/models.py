@@ -1,7 +1,14 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
-from . import Role
+from . import Role, AddressType
+
+
+class User(AbstractBaseUser):
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    age = models.PositiveIntegerField()
+    role = models.CharField(max_length=20, blank=True, choices=Role.CHOICES)
 
 
 class Address(models.Model):
@@ -10,10 +17,6 @@ class Address(models.Model):
     city = models.CharField(max_length=70, blank=True)
     province = models.CharField(max_length=70, blank=True)
     postal_code = models.CharField(max_length=20, blank=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="addresses")
+    type = models.CharField(max_length=15, blank=True, choices=AddressType.CHOICES)
 
-
-class User(AbstractBaseUser):
-    first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, blank=True)
-    age = models.PositiveIntegerField()
-    role = models.CharField(max_length=20, blank=True, choices=Role.CHOICES)
