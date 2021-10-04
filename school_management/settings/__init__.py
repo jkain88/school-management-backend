@@ -1,8 +1,6 @@
-import os
-
 from .base import *
 
-PROJECT_ENVIRONMENT = os.getenv('PROJECT_ENVIRONMENT')#, 'prod')
+PROJECT_ENVIRONMENT = os.getenv('PROJECT_ENVIRONMENT')
 
 if PROJECT_ENVIRONMENT == 'prod':
     from .prod import *
