@@ -1,4 +1,5 @@
 .idea
 __pycache__/
 /static/
+/staticfiles/
 db.sqlite3
