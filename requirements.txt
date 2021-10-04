@@ -5,6 +5,7 @@ django-countries==7.2.1
 django-phonenumber-field==5.2.0
 graphene==2.1.9
 graphene-django==2.15.0
+graphene-django-optimizer==0.9.0
 graphql-core==2.3.2
 graphql-relay==2.0.1
 gunicorn==20.1.0
