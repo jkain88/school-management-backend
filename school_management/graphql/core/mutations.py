@@ -91,6 +91,21 @@ class BaseMutation(graphene.Mutation):
             )
 
     @classmethod
+    def get_node_by_pk(
+        cls, info, graphene_type: ObjectType, pk: Union[int, str], qs=None
+    ):
+        """Attempt to resolve a node from the given internal ID.
+
+        Whether by using the provided query set object or by calling type's get_node().
+        """
+        if qs is not None:
+            return qs.filter(pk=pk).first()
+        get_node = getattr(graphene_type, "get_node", None)
+        if get_node:
+            return get_node(info, pk)
+        return None
+
+    @classmethod
     def get_node_or_error(cls, info, node_id, field="id", only_type=None, qs=None):
         if not node_id:
             return None
