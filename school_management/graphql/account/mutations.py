@@ -2,8 +2,11 @@ import graphene
 from graphql_jwt import ObtainJSONWebToken, Verify
 from graphql_jwt.exceptions import JSONWebTokenError
 
+from .inputs import AccountRegisterInput
 from .types import User
+from ..core.mutations import ModelMutation
 from ..core.types import Error
+from ...account import models
 
 
 class CreateToken(ObtainJSONWebToken):
@@ -27,3 +30,26 @@ class CreateToken(ObtainJSONWebToken):
     @classmethod
     def resolve(cls, root, info, **kwargs):
         return cls(user=info.context.user, errors=[])
+
+
+class AccountRegister(ModelMutation):
+    user = graphene.Field(User)
+
+    class Arguments:
+        input = AccountRegisterInput(description="Fields required to create a user.", required=True)
+
+    class Meta:
+        description = "Regsiter a new user."
+        exclude = ["password"]
+        model = models.User
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        data = data.get("input")
+        password = data.pop("password")
+
+        user = models.User.objects.create(**data)
+        user.set_password(password)
+        user.save()
+
+        return AccountRegister(user=user)
