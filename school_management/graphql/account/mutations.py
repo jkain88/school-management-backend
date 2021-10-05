@@ -5,6 +5,7 @@ from graphql_jwt.exceptions import JSONWebTokenError
 from .types import User
 from ..core.types import Error
 
+
 class CreateToken(ObtainJSONWebToken):
     """Mutation that authenticates a user and returns token and user data.
 
@@ -19,11 +20,9 @@ class CreateToken(ObtainJSONWebToken):
     @classmethod
     def mutate(cls, root, info, **kwargs):
         try:
-            result = super().mutate(root, info, **kwargs)
-        except JSONWebTokenError as e:
-            return CreateToken(errors=[Error(message=str(e))])
-        else:
-            return result
+            return super().mutate(root, info, **kwargs)
+        except JSONWebTokenError:
+            return None
 
     @classmethod
     def resolve(cls, root, info, **kwargs):
