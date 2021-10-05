@@ -1,4 +1,5 @@
 from itertools import chain
+from typing import Tuple
 
 from django.core.exceptions import (
     ValidationError,
@@ -16,7 +17,8 @@ from .types import (
 )
 from .utils import (
     from_global_id_strict_type,
-    validation_error_to_error_type
+    get_error_fields,
+    validation_error_to_error_type,
 )
 
 registry = get_global_registry()
@@ -54,6 +56,41 @@ class BaseMutation(graphene.Mutation):
         abstract = True
 
     @classmethod
+    def __init_subclass_with_meta__(
+        cls,
+        description=None,
+        permissions: Tuple = None,
+        _meta=None,
+        error_type_class=None,
+        error_type_field=None,
+        **options,
+    ):
+        if not _meta:
+            _meta = MutationOptions(cls)
+
+        if not description:
+            raise ImproperlyConfigured("No description provided in Meta")
+
+        if isinstance(permissions, str):
+            permissions = (permissions,)
+
+        if permissions and not isinstance(permissions, tuple):
+            raise ImproperlyConfigured(
+                "Permissions should be a tuple or a string in Meta"
+            )
+
+        _meta.permissions = permissions
+        _meta.error_type_class = error_type_class
+        _meta.error_type_field = error_type_field
+        super().__init_subclass_with_meta__(
+            description=description, _meta=_meta, **options
+        )
+        if error_type_class and error_type_field:
+            cls._meta.fields.update(
+                get_error_fields(error_type_class, error_type_field)
+            )
+
+    @classmethod
     def get_node_or_error(cls, info, node_id, field="id", only_type=None, qs=None):
         if not node_id:
             return None
@@ -83,6 +120,11 @@ class BaseMutation(graphene.Mutation):
                     }
                 )
         return node
+
+    @classmethod
+    def _update_mutation_arguments_and_fields(cls, arguments, fields):
+        cls._meta.arguments.update(arguments)
+        cls._meta.fields.update(fields)
 
     @classmethod
     def check_permissions(cls, context):
