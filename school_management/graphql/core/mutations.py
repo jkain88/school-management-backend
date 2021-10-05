@@ -1,11 +1,12 @@
 from itertools import chain
-from typing import Tuple
+from typing import Tuple, Union
 
 from django.core.exceptions import (
     ValidationError,
     ImproperlyConfigured
 )
 import graphene
+from graphene import ObjectType
 from graphene.types.mutation import MutationOptions
 from graphene_django.registry import get_global_registry
 from graphql.error import GraphQLError
