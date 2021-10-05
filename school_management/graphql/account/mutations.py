@@ -2,8 +2,14 @@ import graphene
 from graphql_jwt import ObtainJSONWebToken, Verify
 from graphql_jwt.exceptions import JSONWebTokenError
 
-from .inputs import AccountRegisterInput
-from .types import User
+from .inputs import (
+    AccountRegisterInput,
+    AddressCreateInput
+)
+from .types import (
+    User,
+    Address
+)
 from ..core.mutations import ModelMutation
 from ..core.types import Error
 from ...account import models
@@ -39,7 +45,7 @@ class AccountRegister(ModelMutation):
         input = AccountRegisterInput(description="Fields required to create a user.", required=True)
 
     class Meta:
-        description = "Regsiter a new user."
+        description = "Registers a new user."
         exclude = ["password"]
         model = models.User
 
@@ -53,3 +59,26 @@ class AccountRegister(ModelMutation):
         user.save()
 
         return AccountRegister(user=user)
+
+
+class AddressCreate(ModelMutation):
+    address = graphene.Field(Address)
+
+    class Arguments:
+        input = AddressCreateInput(description="Fields required to create an address for a user", required=True)
+
+    class Meta:
+        description = "Creates an address for a user"
+        model = models.Address
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        data = data.get("input")
+        user_id = data.pop("user")
+        user = cls.get_node_or_error(info, user_id, User)
+
+        address = models.Address.objects.create(**data, user=user)
+        print(data)
+        print(user)
+
+        return AddressCreate(address=address)

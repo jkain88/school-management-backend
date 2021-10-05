@@ -1,8 +1,9 @@
 import graphene
 
 from .mutations import (
-    CreateToken,
-    AccountRegister
+    AccountRegister,
+    AddressCreate,
+    CreateToken
 )
 from .types import User
 
@@ -12,5 +13,7 @@ class AccountQueries(graphene.ObjectType):
 
 
 class AccountMutations(graphene.ObjectType):
-    create_token = CreateToken.Field()
     account_register = AccountRegister.Field()
+    address_create = AddressCreate.Field()
+    create_token = CreateToken.Field()
+
