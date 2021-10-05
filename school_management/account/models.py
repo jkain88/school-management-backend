@@ -24,5 +24,5 @@ class Address(models.Model):
     province = models.CharField(max_length=70)
     postal_code = models.CharField(max_length=20)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="addresses")
-    type = models.CharField(max_length=15, choices=AddressType.CHOICES)
+    address_type = models.CharField(max_length=15, choices=AddressType.CHOICES)
 
