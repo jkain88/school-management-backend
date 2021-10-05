@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -12,6 +12,9 @@ class User(AbstractBaseUser):
     age = models.PositiveIntegerField()
     role = models.CharField(max_length=20, choices=Role.CHOICES)
     contact_number = PhoneNumberField(blank=True)
+    objects = UserManager()
+
+    USERNAME_FIELD = "email"
 
 
 class Address(models.Model):
