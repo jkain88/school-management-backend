@@ -325,6 +325,19 @@ class ModelMutation(BaseMutation):
         return instance
 
     @classmethod
+    def update_instance(cls, **data):
+        """
+            Convert relay id to object id then updates model object base on given data
+        """
+        id = graphene.Node.from_global_id(data.get("id"))[1]
+        data = data.get("input")
+
+        cls._meta.model.objects.filter(id=id).update(**data)
+        instance = cls._meta.model.objects.get(id=id)
+        return instance
+
+
+    @classmethod
     def perform_mutation(cls, _root, info, **data):
         """Perform model mutation.
 
