@@ -7,8 +7,11 @@ from django.core.exceptions import (
     NON_FIELD_ERRORS
 )
 import graphene
+from graphene import List
 from graphene import ObjectType
+from graphene_django.forms.converter import convert_form_field
 
+from .fields import ListObjectTypeFilter
 from .types import Error
 
 
@@ -130,3 +133,8 @@ def validation_error_to_error_type(validation_error: ValidationError) -> list:
                 )
             )
     return err_list
+
+
+@convert_form_field.register(ListObjectTypeFilter)
+def convert_list_object_type(field):
+    return List(field.input_class)

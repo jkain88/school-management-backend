@@ -11,6 +11,7 @@ from .mutations import (
     CreateToken
 )
 from .types import User
+from ..core.fields import FilterInputConnectionField
 
 
 class AccountQueries(graphene.ObjectType):
