@@ -6,6 +6,8 @@ from .mutations import (
     AccountUpdate,
     AccountDelete,
     AddressCreate,
+    AddressUpdate,
+    AddressDelete,
     CreateToken
 )
 from .types import User
@@ -25,5 +27,7 @@ class AccountMutations(graphene.ObjectType):
     account_delete = AccountDelete.Field()
 
     address_create = AddressCreate.Field()
-    create_token = CreateToken.Field()
+    address_update = AddressUpdate.Field()
+    address_delete = AddressDelete.Field()
 
+    create_token = CreateToken.Field()

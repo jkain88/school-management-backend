@@ -57,7 +57,6 @@ class AccountRegister(ModelMutation):
         user = models.User.objects.create(**data)
         user.set_password(password)
         user.save()
-
         return AccountRegister(user=user)
 
 
@@ -66,10 +65,10 @@ class AccountUpdate(ModelMutation):
 
     class Arguments:
         id = graphene.ID(description="User ID")
-        input = AccountInput(description="Fields required to create a user.", required=True)
+        input = AccountInput(description="Fields required to update a user.", required=True)
 
     class Meta:
-        description = "Registers a new user."
+        description = "Updates a user."
         exclude = ["password"]
         model = models.User
 
@@ -79,12 +78,7 @@ class AccountUpdate(ModelMutation):
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
-        id = graphene.Node.from_global_id(data.get("id"))[1]
-        data = data.get("input")
-
-        models.User.objects.filter(id=id).update(**data)
-        user = models.User.objects.get(id=id)
-
+        user = cls.update_instance(**data)
         return AccountUpdate(user=user)
 
 
@@ -107,7 +101,6 @@ class AccountDelete(ModelMutation):
     def perform_mutation(cls, _root, info, **data):
         user = cls.get_node_or_error(info, data.get("id"))
         user.delete()
-
         return AccountUpdate(user=user)
 
 
@@ -122,11 +115,56 @@ class AddressCreate(ModelMutation):
         model = models.Address
 
     @classmethod
+    def check_permissions(cls, context):
+        return context.user.is_authenticated
+
+    @classmethod
     def perform_mutation(cls, _root, info, **data):
         data = data.get("input")
         user_id = data.pop("user")
         user = cls.get_node_or_error(info, user_id, User)
 
         address = models.Address.objects.create(**data, user=user)
-
         return AddressCreate(address=address)
+
+
+class AddressUpdate(ModelMutation):
+    address = graphene.Field(Address)
+
+    class Arguments:
+        id = graphene.ID(description="Address ID",required=True)
+        input = AddressInput(description="Fields required to update an address for a user", required=True)
+
+    class Meta:
+        description = "Updates an address"
+        model = models.Address
+
+    @classmethod
+    def check_permissions(cls, context):
+        return context.user.is_authenticated
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        address = cls.update_instance(**data)
+        return AddressUpdate(address=address)
+
+
+class AddressDelete(ModelMutation):
+    address = graphene.Field(Address)
+
+    class Arguments:
+        id = graphene.ID(description="Address ID",required=True)
+
+    class Meta:
+        description = "Deletes an address"
+        model = models.Address
+
+    @classmethod
+    def check_permissions(cls, context):
+        return context.user.is_authenticated
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        address = cls.get_node_or_error(info, data.get("id"))
+        address.delete()
+        return AddressDelete(address=address)
