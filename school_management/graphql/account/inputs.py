@@ -6,21 +6,21 @@ from .enums import (
 )
 
 
-class AccountRegisterInput(graphene.InputObjectType):
-    email = graphene.String(required=True)
-    first_name = graphene.String(required=True)
-    last_name = graphene.String(required=True)
-    password = graphene.String(required=True)
-    age = graphene.Int(required=True)
-    role = graphene.Enum.from_enum(Role)(required=True)
-    contact_number = graphene.String(required=True)
+class AccountInput(graphene.InputObjectType):
+    email = graphene.String()
+    first_name = graphene.String()
+    last_name = graphene.String()
+    password = graphene.String()
+    age = graphene.Int()
+    role = graphene.Enum.from_enum(Role)()
+    contact_number = graphene.String()
 
 
-class AddressCreateInput(graphene.InputObjectType):
-    street = graphene.String(required=True)
-    city_area = graphene.String(required=True)
-    city = graphene.String(required=True)
-    province = graphene.String(required=True)
-    postal_code = graphene.String(required=True)
-    user = graphene.ID(required=True, description="User ID")
-    address_type = graphene.Enum.from_enum(AddressType)(required=True)
+class AddressInput(graphene.InputObjectType):
+    street = graphene.String()
+    city_area = graphene.String()
+    city = graphene.String()
+    province = graphene.String()
+    postal_code = graphene.String()
+    user = graphene.ID(description="User ID")
+    address_type = graphene.Enum.from_enum(AddressType)

@@ -3,8 +3,8 @@ from graphql_jwt import ObtainJSONWebToken, Verify
 from graphql_jwt.exceptions import JSONWebTokenError
 
 from .inputs import (
-    AccountRegisterInput,
-    AddressCreateInput
+    AccountInput,
+    AddressInput
 )
 from .types import (
     User,
@@ -42,7 +42,7 @@ class AccountRegister(ModelMutation):
     user = graphene.Field(User)
 
     class Arguments:
-        input = AccountRegisterInput(description="Fields required to create a user.", required=True)
+        input = AccountInput(description="Fields required to create a user.", required=True)
 
     class Meta:
         description = "Registers a new user."
@@ -61,11 +61,61 @@ class AccountRegister(ModelMutation):
         return AccountRegister(user=user)
 
 
+class AccountUpdate(ModelMutation):
+    user = graphene.Field(User)
+
+    class Arguments:
+        id = graphene.ID(description="User ID")
+        input = AccountInput(description="Fields required to create a user.", required=True)
+
+    class Meta:
+        description = "Registers a new user."
+        exclude = ["password"]
+        model = models.User
+
+    @classmethod
+    def check_permissions(cls, context):
+        return context.user.is_authenticated
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        id = graphene.Node.from_global_id(data.get("id"))[1]
+        data = data.get("input")
+
+        models.User.objects.filter(id=id).update(**data)
+        user = models.User.objects.get(id=id)
+
+        return AccountUpdate(user=user)
+
+
+class AccountDelete(ModelMutation):
+    user = graphene.Field(User)
+
+    class Arguments:
+        id = graphene.ID(description="User ID")
+
+    class Meta:
+        description = "Deletes a user"
+        exclude = ["password"]
+        model = models.User
+
+    @classmethod
+    def check_permissions(cls, context):
+        return context.user.is_authenticated
+
+    @classmethod
+    def perform_mutation(cls, _root, info, **data):
+        user = cls.get_node_or_error(info, data.get("id"))
+        user.delete()
+
+        return AccountUpdate(user=user)
+
+
 class AddressCreate(ModelMutation):
     address = graphene.Field(Address)
 
     class Arguments:
-        input = AddressCreateInput(description="Fields required to create an address for a user", required=True)
+        input = AddressInput(description="Fields required to create an address for a user", required=True)
 
     class Meta:
         description = "Creates an address for a user"
@@ -78,7 +128,5 @@ class AddressCreate(ModelMutation):
         user = cls.get_node_or_error(info, user_id, User)
 
         address = models.Address.objects.create(**data, user=user)
-        print(data)
-        print(user)
 
         return AddressCreate(address=address)
