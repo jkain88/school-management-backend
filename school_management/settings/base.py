@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django_countries',
     'graphene_django',
     'whitenoise.runserver_nostatic',
-    'phonenumber_field'
+    'phonenumber_field',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
