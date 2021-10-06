@@ -5,6 +5,7 @@ import graphene_django_optimizer as gql_optimizer
 
 from ...account import models
 
+
 class Address(DjangoObjectType):
     class Meta:
         interfaces = [relay.Node]
@@ -16,7 +17,7 @@ class Address(DjangoObjectType):
             "city",
             "province",
             "postal_code",
-            "type"
+            "address_type"
         ]
 
 
