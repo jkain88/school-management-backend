@@ -23,4 +23,4 @@ class AddressInput(graphene.InputObjectType):
     province = graphene.String()
     postal_code = graphene.String()
     user = graphene.ID(description="User ID")
-    address_type = graphene.Enum.from_enum(AddressType)
+    address_type = graphene.Enum.from_enum(AddressType)()
