@@ -12,7 +12,7 @@ class AccountInput(graphene.InputObjectType):
     last_name = graphene.String()
     password = graphene.String()
     age = graphene.Int()
-    role = graphene.Enum.from_enum(Role)()
+    role = Role()
     contact_number = graphene.String()
 
 
@@ -23,4 +23,4 @@ class AddressInput(graphene.InputObjectType):
     province = graphene.String()
     postal_code = graphene.String()
     user = graphene.ID(description="User ID")
-    address_type = graphene.Enum.from_enum(AddressType)()
+    address_type = AddressType()
