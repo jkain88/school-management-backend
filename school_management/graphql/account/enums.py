@@ -1,13 +1,13 @@
-from enum import Enum
+import graphene
 
 
-class Role(Enum):
+class Role(graphene.Enum):
     STUDENT = "student"
     TEACHER = "teacher"
     STAFF = "staff"
     ADMIN = "admin"
 
 
-class AddressType(Enum):
+class AddressType(graphene.Enum):
     PERMANENT = "permanent"
     CURRENT = "current"
