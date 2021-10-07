@@ -9,67 +9,245 @@
 			"name": "account",
 			"item": [
 				{
-					"name": "Create token",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation{\r\n    createToken(\r\n        email: \"martinjosh@vashcorp.com\"\r\n        password: \"test\"\r\n    ){\r\n        token \r\n        user{\r\n            id\r\n            email\r\n            addresses{\r\n                id\r\n            }\r\n        }\r\n        errors{\r\n            message\r\n        }\r\n    }\r\n}",
-								"variables": ""
-							}
+					"name": "mutations",
+					"item": [
+						{
+							"name": "Create token",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n    createToken(\r\n        email: \"martinjosh@vashcorp.com\"\r\n        password: \"test\"\r\n    ){\r\n        token \r\n        user{\r\n            id\r\n            email\r\n            addresses{\r\n                id\r\n            }\r\n        }\r\n        errors{\r\n            message\r\n        }\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{host}}",
-							"host": [
-								"{{host}}"
-							]
+						{
+							"name": "Account Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  accountRegister(\r\n  input: {\r\n    email:\"torricermartinjosh@gmail.com\"\r\n    firstName:\"Martin\"\r\n    lastName:\"Torricer\"\r\n    role: STUDENT\r\n    password: \"test\"\r\n    age: 24\r\n    contactNumber: \"09451493731\"\r\n  }){\r\n    user{\r\n      email\r\n      firstName\r\n      lastName\r\n      age\r\n    }\r\n    errors{\r\n      message\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account update",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  accountUpdate(\r\n  id:\"VXNlcjox\",\r\n  input: {\r\n    age: 24\r\n  }){\r\n    user{\r\n      email\r\n      firstName\r\n      lastName\r\n      age\r\n    }\r\n    errors{\r\n      message\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account delete",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  accountDelete(id:\"VXNlcjoz\"){\r\n    errors{\r\n      message\r\n    }\r\n    user{\r\n      email\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Address create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  addressCreate(\r\n    input:{\r\n      street: \"FDC3\"\r\n      cityArea: \"lingsat\"\r\n      city: \"SFC\"\r\n      province: \"LU\"\r\n      postalCode: \"2500\"\r\n      user: \"VXNlcjox\"\r\n      addressType: PERMANENT\r\n    }\r\n  ){\r\n    address{\r\n\t\tstreet\r\n    }\r\n    errors{\r\n      message\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Address update",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  addressUpdate(\r\n    id:\"QWRkcmVzczox\",\r\n    input:{\r\n      street: \"FDC3\"\r\n    }\r\n  ){\r\n    address{\r\n\t\t\tstreet\r\n    }\r\n    errors{\r\n      message\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Address delete",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation{\r\n  addressDelete(\r\n    id:\"QWRkcmVzczoy\",\r\n  ){\r\n    address{\r\n\t\tstreet\r\n    }\r\n    errors{\r\n      message\r\n    }\r\n  }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "Account register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation {\r\n  accountRegister(input:{\r\n    email:\"martinjosh+2@vashcorp.com\"\r\n    password:\"test\"\r\n    firstName:\"Martin\"\r\n    lastName:\"Torricer\"\r\n    age:22\r\n    contactNumber:\"09451493831\"\r\n    role: STUDENT\r\n  }){\r\n    user{\r\n      id\r\n    }\r\n  }\r\n}\r\n",
-								"variables": ""
-							}
+					"name": "queries",
+					"item": [
+						{
+							"name": "Me",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n    me{\r\n        id\r\n        email\r\n        firstName\r\n        lastName\r\n        age\r\n        addresses{\r\n            id\r\n            street\r\n            city\r\n            addressType\r\n        }\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{host}}",
-							"host": [
-								"{{host}}"
-							]
+						{
+							"name": "Users",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hcnRpbmpvc2hAdmFzaGNvcnAuY29tIiwiZXhwIjoxNjMzNTIxMDAxLCJvcmlnSWF0IjoxNjMzNTIwNzAxfQ._hHa9SOo_fLhiHRLIZofRcjeRA5SpQ5X_-0np4SNweA"
+									}
+								],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "{\r\n    users(\r\n        first:10\r\n        filter: {\r\n            role: STUDENT\r\n        }\r\n        ){\r\n        edges{\r\n            node{\r\n                id\r\n                email\r\n            }\r\n        }\r\n    }\r\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{host}}",
+									"host": [
+										"{{host}}"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "Address create",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "graphql",
-							"graphql": {
-								"query": "mutation {\r\n  accountRegister(input:{\r\n    email:\"martinjosh+2@vashcorp.com\"\r\n    password:\"test\"\r\n    firstName:\"Martin\"\r\n    lastName:\"Torricer\"\r\n    age:22\r\n    contactNumber:\"09451493831\"\r\n    role: STUDENT\r\n  }){\r\n    user{\r\n      id\r\n    }\r\n  }\r\n}\r\n",
-								"variables": ""
-							}
-						},
-						"url": {
-							"raw": "{{host}}",
-							"host": [
-								"{{host}}"
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			]
 		}
