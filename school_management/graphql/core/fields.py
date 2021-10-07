@@ -1,9 +1,11 @@
+import json
 from functools import partial
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 import django_filters
 from django_filters.fields import MultipleChoiceField
+from graphql.error import GraphQLError
 from graphene_django.fields import DjangoConnectionField
 from promise import Promise
 
@@ -78,6 +80,7 @@ class FilterInputConnectionField(BaseDjangoConnectionField):
         resolver,
         connection,
         default_manager,
+        queryset_resolver,
         max_limit,
         enforce_first_or_last,
         filterset_class,
@@ -86,7 +89,6 @@ class FilterInputConnectionField(BaseDjangoConnectionField):
         info,
         **args,
     ):
-
         # Disable `enforce_first_or_last` if not querying for `edges`.
         values = [
             field.name.value for field in info.field_asts[0].selection_set.selections
@@ -97,11 +99,11 @@ class FilterInputConnectionField(BaseDjangoConnectionField):
         first = args.get("first")
         last = args.get("last")
 
-        if enforce_first_or_last:
-            assert first or last, (
-                "You must provide a `first` or `last` value to properly "
-                "paginate the `{}` connection."
-            ).format(info.field_name)
+        if enforce_first_or_last and not (first or last):
+            raise GraphQLError(
+                f"You must provide a `first` or `last` value to properly paginate "
+                f"the `{info.field_name}` connection."
+            )
 
         if max_limit:
             if first:
@@ -120,17 +122,37 @@ class FilterInputConnectionField(BaseDjangoConnectionField):
 
         iterable = resolver(root, info, **args)
 
-        on_resolve = partial(cls.resolve_connection, connection, default_manager, args)
+        if iterable is None:
+            iterable = default_manager
+        # thus the iterable gets refiltered by resolve_queryset
+        # but iterable might be promise
+        iterable = queryset_resolver(connection, iterable, info, args)
 
-        filter_input = args.get(filters_name)
-        if filter_input and filterset_class:
-            iterable = filterset_class(
-                data=dict(filter_input), queryset=iterable, request=info.context
-            ).qs
+        on_resolve = partial(
+            cls.resolve_connection, connection, args, max_limit=max_limit
+        )
+
+        iterable = cls.filter_iterable(
+            iterable, filterset_class, filters_name, info, **args
+        )
 
         if Promise.is_thenable(iterable):
             return Promise.resolve(iterable).then(on_resolve)
         return on_resolve(iterable)
+
+    @classmethod
+    def filter_iterable(cls, iterable, filterset_class, filters_name, info, **args):
+        filter_input = args.get(filters_name)
+
+        if filter_input and filterset_class:
+            instance = filterset_class(
+                data=dict(filter_input), queryset=iterable, request=info.context
+            )
+            # Make sure filter input has valid values
+            if not instance.is_valid():
+                raise GraphQLError(json.dumps(instance.errors.get_json_data()))
+            iterable = instance.qs
+        return iterable
 
     def get_resolver(self, parent_resolver):
         return partial(
