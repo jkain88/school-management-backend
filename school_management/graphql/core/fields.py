@@ -1,10 +1,5 @@
 import json
 from functools import partial
-
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-import django_filters
-from django_filters.fields import MultipleChoiceField
 from graphql.error import GraphQLError
 from graphene_django.fields import DjangoConnectionField
 from promise import Promise
@@ -29,40 +24,11 @@ def patch_pagination_args(field: DjangoConnectionField):
         "Return the elements in the list that come after the specified cursor."
     )
 
-class DefaultMultipleChoiceField(MultipleChoiceField):
-    default_error_messages = {"invalid_list": _("Enter a list of values.")}
-
-    def to_python(self, value):
-        if not value:
-            return []
-        if not isinstance(value, list):
-            value = [value]
-        return value
-
-    def validate(self, value):
-        """Validate that the input is a list or tuple."""
-        if self.required and not value:
-            raise ValidationError(self.error_messages["required"], code="required")
-        if not isinstance(value, (list, tuple)):
-            raise ValidationError(
-                self.error_messages["invalid_list"], code="invalid_list"
-            )
-        return True
-
-
 
 class BaseDjangoConnectionField(DjangoConnectionField):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         patch_pagination_args(self)
-
-
-class ListObjectTypeFilter(django_filters.MultipleChoiceFilter):
-    field_class = DefaultMultipleChoiceField
-
-    def __init__(self, input_class, *args, **kwargs):
-        self.input_class = input_class
-        super().__init__(*args, **kwargs)
 
 
 class FilterInputConnectionField(BaseDjangoConnectionField):
