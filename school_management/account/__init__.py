@@ -20,3 +20,13 @@ class AddressType:
         (PERMANENT, "Permanent"),
         (CURRENT, "Current")
     ]
+
+
+class Sex:
+    MALE = "male"
+    FEMALE = "female"
+
+    CHOICES = [
+        (MALE, "Male"),
+        (FEMALE, "Female")
+    ]
