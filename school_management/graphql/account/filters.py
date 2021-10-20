@@ -2,7 +2,7 @@ import django_filters
 
 from ..core.types import FilterInputObjectType
 from ..core.filters import EnumFilter
-from ...account.models import User
+from ...account.models import Student
 from .enums import Role
 
 def filter_by_role(qs, _, value):
@@ -10,7 +10,7 @@ def filter_by_role(qs, _, value):
     return qs
 
 
-class UserFilter(django_filters.FilterSet):
+class StudentFilter(django_filters.FilterSet):
     role = EnumFilter(input_class=Role, method=filter_by_role)
     email = django_filters.CharFilter(lookup_expr='icontains')
     first_name = django_filters.CharFilter(lookup_expr='icontains')
@@ -18,7 +18,7 @@ class UserFilter(django_filters.FilterSet):
 
 
     class Meta:
-        model = User
+        model = Student
         fields = [
             "email",
             "first_name",
@@ -27,6 +27,6 @@ class UserFilter(django_filters.FilterSet):
         ]
 
 
-class UserFilterInput(FilterInputObjectType):
+class StudentFilterInput(FilterInputObjectType):
     class Meta:
-        filterset_class = UserFilter
+        filterset_class = StudentFilter

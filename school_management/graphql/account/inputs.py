@@ -5,15 +5,18 @@ from .enums import (
     AddressType
 )
 
-
-class AccountInput(graphene.InputObjectType):
+class BaseUserInput(graphene.AbstractType):
     email = graphene.String()
     first_name = graphene.String()
     last_name = graphene.String()
     password = graphene.String()
     age = graphene.Int()
-    role = Role()
     contact_number = graphene.String()
+
+
+class StudentInput(graphene.InputObjectType, BaseUserInput):
+    mother_name = graphene.String()
+    father_name = graphene.String()
 
 
 class AddressInput(graphene.InputObjectType):
