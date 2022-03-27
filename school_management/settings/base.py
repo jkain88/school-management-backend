@@ -36,7 +36,9 @@ INSTALLED_APPS = [
 
     #   Local apps
     'school_management.account',
+    'school_management.subject',
     'school_management.core',
+
 
     # External apps
     'django_countries',

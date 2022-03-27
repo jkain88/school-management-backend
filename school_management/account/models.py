@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from ..subject.models import Subject
 from . import (
     Role,
     AddressType,
@@ -11,7 +12,7 @@ from . import (
 
 class UserManager(BaseUserManager):
     def create_user(
-        self, email, password=None, is_staff=False, is_active=True, **extra_fields
+        self, email, password=None, is_staff=False, **extra_fields
     ):
         """Create a user instance with the given email and password."""
         email = UserManager.normalize_email(email)
@@ -57,11 +58,13 @@ class User(AbstractBaseUser):
 
 
 class StudentProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     mother_name = models.CharField(max_length=200, blank=True)
     father_name = models.CharField(max_length=200, blank=True)
+    subjects = models.ManyToManyField(Subject)
 
 
-class Teacher(models.Model):
-    students = models.ManyToManyField(User)
-    # subjects
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    students = models.ManyToManyField(StudentProfile, related_name="teachers")
+    subjects = models.ManyToManyField(Subject)
