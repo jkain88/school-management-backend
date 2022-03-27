@@ -21,14 +21,14 @@ class Address(DjangoObjectType):
         ]
 
 
-class Student(DjangoObjectType):
+class StudentProfile(DjangoObjectType):
     addresses = gql_optimizer.field(
         graphene.List(Address, description="User's list of addresses")
     )
 
     class Meta:
         interfaces = [relay.Node]
-        model = models.Student
+        model = models.StudentProfile
         only_fields = [
             "id",
             "email",
@@ -37,6 +37,19 @@ class Student(DjangoObjectType):
             "age",
         ]
 
-    @staticmethod
-    def resolve_addresses(root:models.Student, _):
-        return root.addresses.all()
+    # @staticmethod
+    # def resolve_addresses(root: models.StudentProfile, _):
+    #     return root.addresses.all()
+
+
+class User(DjangoObjectType):
+    class Meta:
+        interfaces = [relay.Node]
+        model = models.User
+        only_fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "age"
+        ]

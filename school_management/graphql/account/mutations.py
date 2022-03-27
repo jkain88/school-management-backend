@@ -3,12 +3,13 @@ from graphql_jwt import ObtainJSONWebToken, Verify
 from graphql_jwt.exceptions import JSONWebTokenError
 
 from .inputs import (
+    AddressInput,
     StudentInput,
-    AddressInput
+    UserInput,
 )
 from .types import (
-    Student,
-    Address
+    Address,
+    User,
 )
 from ..core.mutations import ModelMutation
 from ..core.types import Error
@@ -24,7 +25,7 @@ class CreateToken(ObtainJSONWebToken):
     """
 
     errors = graphene.List(Error, required=True)
-    #user = graphene.Field(User)
+    user = graphene.Field(User)
 
     @classmethod
     def mutate(cls, root, info, **kwargs):
@@ -38,39 +39,45 @@ class CreateToken(ObtainJSONWebToken):
         return cls(user=info.context.user, errors=[])
 
 
-class StudentCreate(ModelMutation):
-    user = graphene.Field(Student)
+class AccountCreate(ModelMutation):
+    user = graphene.Field(User)
 
     class Arguments:
-        input = StudentInput(description="Fields required to create a student.", required=True)
+        input = UserInput(description="Fields required to create an account.", required=True)
 
     class Meta:
-        description = "Registers a new user."
+        description = "Registers a new account base on given role."
         exclude = ["password"]
-        model = models.Student
+        model = models.User
 
     @classmethod
     def perform_mutation(cls, _root, info, **data):
         data = data.get("input")
         password = data.pop("password")
+        role = data.get("role", None)
 
-        user = models.Student.objects.create(**data)
+        user = models.User.objects.create(**data)
         user.set_password(password)
         user.save()
-        return StudentCreate(user=user)
+
+        # Initialize student profile
+        if role == "student":
+            models.StudentProfile.objects.create(user=user)
+
+        return AccountCreate(user=user)
 
 
-class StudentUpdate(ModelMutation):
-    user = graphene.Field(Student)
+class AccountUpdate(ModelMutation):
+    user = graphene.Field(User)
 
     class Arguments:
-        id = graphene.ID(description="Student ID")
-        input = StudentInput(description="Fields required to update a student.", required=True)
+        id = graphene.ID(description="Account ID")
+        input = StudentInput(description="Fields required to update an account.", required=True)
 
     class Meta:
-        description = "Updates a user."
+        description = "Updates an account."
         exclude = ["password"]
-        model = models.Student
+        model = models.User
 
     @classmethod
     def check_permissions(cls, context):
@@ -79,19 +86,19 @@ class StudentUpdate(ModelMutation):
     @classmethod
     def perform_mutation(cls, _root, info, **data):
         user = cls.update_instance(**data)
-        return StudentUpdate(user=user)
+        return AccountUpdate(user=user)
 
 
-class StudentDelete(ModelMutation):
-    user = graphene.Field(Student)
+class AccountDelete(ModelMutation):
+    user = graphene.Field(User)
 
     class Arguments:
-        id = graphene.ID(description="Student ID")
+        id = graphene.ID(description="Account ID")
 
     class Meta:
         description = "Deletes a user"
         exclude = ["password"]
-        model = models.Student
+        model = models.User
 
     @classmethod
     def check_permissions(cls, context):
@@ -101,7 +108,7 @@ class StudentDelete(ModelMutation):
     def perform_mutation(cls, _root, info, **data):
         user = cls.get_node_or_error(info, data.get("id"))
         user.delete()
-        return StudentDelete(user=user)
+        return AccountDelete(user=user)
 
 
 class AddressCreate(ModelMutation):
