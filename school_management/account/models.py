@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from model_utils.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
+
 
 from ..subject.models import Subject
 from . import (
@@ -32,7 +34,7 @@ class UserManager(BaseUserManager):
         )
 
 
-class Address(models.Model):
+class Address(TimeStampedModel):
     street = models.CharField(max_length=100, blank=True)
     city_area = models.CharField(max_length=100)
     city = models.CharField(max_length=70)
@@ -57,14 +59,14 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = "email"
 
 
-class StudentProfile(models.Model):
+class StudentProfile(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     mother_name = models.CharField(max_length=200, blank=True)
     father_name = models.CharField(max_length=200, blank=True)
     subjects = models.ManyToManyField(Subject)
 
 
-class TeacherProfile(models.Model):
+class TeacherProfile(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     students = models.ManyToManyField(StudentProfile, related_name="teachers")
     subjects = models.ManyToManyField(Subject)
