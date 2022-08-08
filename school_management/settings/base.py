@@ -41,8 +41,6 @@ INSTALLED_APPS = [
 
 
     # External apps
-    'django_countries',
-    'graphene_django',
     'whitenoise.runserver_nostatic',
     'phonenumber_field',
     'django_filters'
