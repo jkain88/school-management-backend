@@ -36,14 +36,16 @@ INSTALLED_APPS = [
 
     #   Local apps
     'school_management.account',
+    'school_management.api',
     'school_management.subject',
     'school_management.core',
 
 
     # External apps
-    'whitenoise.runserver_nostatic',
+    'django_filters',
     'phonenumber_field',
-    'django_filters'
+    'rest_framework',
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
