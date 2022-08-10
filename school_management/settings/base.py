@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'phonenumber_field',
     'rest_framework',
+    'rest_framework_simplejwt',
     'whitenoise.runserver_nostatic'
 ]
 
@@ -128,6 +129,11 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    )
+}
