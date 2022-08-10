@@ -127,12 +127,6 @@ STATICFILES_FINDERS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-GRAPHENE = {
-    "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
-    ],
-}
-
 AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
