@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from .models import User
-from .serializers import UserSerializer
+from .models import StudentProfile, TeacherProfile, User
+from .serializers import TeacherProfileSerialzier, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -15,8 +15,15 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
     password = data.pop('password')
+    user = User.objects.create_user(
+      **data,
+      password=password,
+    )
 
-    user = User.objects.create(**data)
-    user.set_password(password)
-    user.save()
+    # Create blank role profiles
+    if data['role'] == 'student':
+      StudentProfile.objects.create(user=user)
+    elif data['role'] == 'teacher':
+      TeacherProfile.objects.create(user=user)
+
     return Response(serializer.data, status=status.HTTP_201_CREATED)
