@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import generics, status, viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import StudentProfile, TeacherProfile, User
@@ -27,3 +28,11 @@ class UserViewSet(viewsets.ModelViewSet):
       TeacherProfile.objects.create(user=user)
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class TeacherProfile(generics.RetrieveUpdateAPIView):
+  serializer_class = TeacherProfileSerialzier
+  permission_classes = [IsAuthenticated]
+
+  def get_object(self):
+    return self.request.user.teacher_profile

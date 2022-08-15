@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import TeacherProfile, User
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
   password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
   class Meta:
     model = User
     fields = [
+      'id',
       'email',
       'first_name',
       'last_name',
@@ -16,4 +17,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
       'contact_number',
       'password',
       'role'
+    ]
+
+
+class TeacherProfileSerialzier(serializers.ModelSerializer):
+  class Meta:
+    model = TeacherProfile
+    fields = [
+      'students',
+      'subjects'
     ]
