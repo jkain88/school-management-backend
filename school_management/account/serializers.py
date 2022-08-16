@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import TeacherProfile, User
+from .models import StudentProfile, TeacherProfile, User
 
 class UserSerializer(serializers.ModelSerializer):
   password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
@@ -20,10 +20,20 @@ class UserSerializer(serializers.ModelSerializer):
     ]
 
 
-class TeacherProfileSerialzier(serializers.ModelSerializer):
+class TeacherProfileSerializer(serializers.ModelSerializer):
   class Meta:
     model = TeacherProfile
     fields = [
       'students',
+      'subjects'
+    ]
+
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = StudentProfile
+    fields = [
+      'father_name',
+      'mother_name',
       'subjects'
     ]

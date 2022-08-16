@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import StudentProfile, TeacherProfile, User
-from .serializers import TeacherProfileSerialzier, UserSerializer
+from .serializers import StudentProfileSerializer, TeacherProfileSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -31,8 +31,17 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class TeacherProfile(generics.RetrieveUpdateAPIView):
-  serializer_class = TeacherProfileSerialzier
+  serializer_class = TeacherProfileSerializer
   permission_classes = [IsAuthenticated]
 
   def get_object(self):
     return self.request.user.teacher_profile
+
+
+class StudentProfile(generics.RetrieveUpdateAPIView):
+  serializer_class = StudentProfileSerializer
+  permission_classes = [IsAuthenticated]
+
+  def get_object(self):
+    return self.request.user.student_profile
+  
