@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 services:
   postgres:
@@ -15,11 +15,12 @@ services:
       - .env
     container_name: school_management_backend
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "python manage.py wait_for_db &&
+            python manage.py migrate &&
             gunicorn school_management.wsgi:application --bind 0.0.0.0:8000 --reload"
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - '8000:8000'
     depends_on:
       - postgres

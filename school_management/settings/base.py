@@ -36,16 +36,17 @@ INSTALLED_APPS = [
 
     #   Local apps
     'school_management.account',
+    'school_management.api',
     'school_management.subject',
     'school_management.core',
 
 
     # External apps
-    'django_countries',
-    'graphene_django',
-    'whitenoise.runserver_nostatic',
+    'django_filters',
     'phonenumber_field',
-    'django_filters'
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'whitenoise.runserver_nostatic'
 ]
 
 MIDDLEWARE = [
@@ -127,13 +128,12 @@ STATICFILES_FINDERS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-GRAPHENE = {
-    "MIDDLEWARE": [
-        "graphql_jwt.middleware.JSONWebTokenMiddleware",
-    ],
-}
-
 AUTHENTICATION_BACKENDS = [
-    "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ]
+}
