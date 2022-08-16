@@ -3,13 +3,12 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
-
-from ..subject.models import Subject
 from . import (
     Role,
     AddressType,
     Sex
 )
+from school_management.subject.models import Subject
 
 
 class UserManager(BaseUserManager):
