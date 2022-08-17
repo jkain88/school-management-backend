@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'school_management.api',
     'school_management.subject',
     'school_management.core',
+    'school_management.course',
 
 
     # External apps
