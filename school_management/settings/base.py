@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # External apps
     'django_filters',
+    'drf_yasg',    
     'phonenumber_field',
     'rest_framework',
     'rest_framework_simplejwt',
