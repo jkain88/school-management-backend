@@ -1,6 +1,7 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+from school_management.account.models import User
 from school_management.core import GradeLevel
 
 
@@ -9,6 +10,7 @@ class Subject(models.Model):
     schedule = models.DateTimeField()
     course = models.CharField(max_length=100, blank=True)
     grade_level = models.CharField(choices=GradeLevel.CHOICES, max_length=50, blank=True)
+    user = models.ManyToManyField(User, related_name='subjects')
 
 
 class Grade(TimeStampedModel):

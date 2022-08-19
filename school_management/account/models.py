@@ -8,7 +8,6 @@ from . import (
     AddressType,
     Sex
 )
-from school_management.subject.models import Subject
 
 
 class UserManager(BaseUserManager):
@@ -62,10 +61,8 @@ class StudentProfile(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name='student_profile')
     mother_name = models.CharField(max_length=200, blank=True)
     father_name = models.CharField(max_length=200, blank=True)
-    subjects = models.ManyToManyField(Subject)
 
 
 class TeacherProfile(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name='teacher_profile')
     students = models.ManyToManyField(StudentProfile, related_name='teachers')
-    subjects = models.ManyToManyField(Subject)
